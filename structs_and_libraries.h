@@ -6,7 +6,6 @@
 #include <stdbool.h>
 #include <inttypes.h>
 #include <dirent.h>
-#include <fileapi.h>
 
 #ifndef COREWARSINTERPRETER_INIT_GLOBALS_H
 #define COREWARSINTERPRETER_INIT_GLOBALS_H
