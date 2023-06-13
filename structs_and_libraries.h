@@ -11,17 +11,18 @@
 #define COREWARSINTERPRETER_INIT_GLOBALS_H
 
 typedef struct  {
-    bool initiaized;
+    bool initialized;
     uint16_t stack_id;
     uint16_t AX, BX, CX, DX, SI, DI, BP, SP, CS, DS, SS, ES, IP, Energy, Flags; // Registers
     uint8_t INT86h_used, INT87h_used;
     char* code;
+    uint16_t code_size;
 } Survivor;
 
 typedef struct {
     Survivor survivors[2];
-    uint16_t shared_memory_id;
     bool living_survivors[2];
+    uint16_t shared_memory_id;
     char* name;
     double points;
     bool is_zombie;

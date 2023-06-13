@@ -38,7 +38,7 @@ void init_survivor_and_team_count() {
     closedir(dir);
 }
 
-char* get_code(char* filename, char* dirname) {
+void get_code(Survivor* survivor, char* filename, char* dirname) { // TODO: validate
     char tpath[512];
     strcpy(tpath, "./survivors/");
     char* path = strcat(strcat(strcat(tpath, dirname), "/"), filename);
@@ -57,15 +57,15 @@ char* get_code(char* filename, char* dirname) {
     char* code;
     if ((code = malloc(sizeof(char)*bin_size)) == 0) {printf("Not enough memory"); exit(1);}
     memcpy(code, tcode, sizeof(char)*bin_size);
-    code[bin_size] = 0;
 
-    return code;
+   survivor->code = code;
+   survivor->code_size = bin_size;
 }
 
 void add_survivor_to_team(Team* team, Survivor survivor) {
-    survivor.initiaized = true;
-    if (!(team->survivors[0].initiaized)) {team->survivors[0] = survivor; return;}
-    if (!(team->survivors[1].initiaized)) {team->survivors[1] = survivor; return;}
+    survivor.initialized = true;
+    if (!(team->survivors[0].initialized)) {team->survivors[0] = survivor; return;}
+    if (!(team->survivors[1].initialized)) {team->survivors[1] = survivor; return;}
     printf("Please make sure there are at most 2 survivors per team."); exit(1);
 }
 

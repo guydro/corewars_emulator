@@ -5,9 +5,9 @@
 
 void init_usr_input() {
     printf("Please enter the number of survivors per round: ");
-    scanf("%" SCNd32, &team_count);
-    printf("Please enter the number of rounds per round: ");
-    scanf("%" SCNd32, &survivor_count);
+    scanf("%" SCNd32, &teams_per_round);
+    printf("Please enter the number of rounds: ");
+    scanf("%" SCNd32, &num_of_rounds);
 }
 
 void load_players() {
@@ -39,13 +39,16 @@ void load_players() {
         team_dir = opendir(strcat(tpath, entry->d_name));
 
         Team team;
-        team.survivors[0].initiaized = false;
-        team.survivors[1].initiaized = false;
+        team.survivors[0].initialized = false;
+        team.survivors[1].initialized = false;
 
         team.living_survivors[0] = false;
         team.living_survivors[1] = false;
 
-        team.name = entry->d_name;
+
+        team.name = malloc(sizeof(char)*(strlen(entry->d_name)+1));
+        memcpy(team.name, entry->d_name, strlen(entry->d_name)+1);
+
 
         team.points = 0;
 
@@ -55,7 +58,7 @@ void load_players() {
             if (survivor_entry->d_name[0] == '.') continue;
             Survivor survivor;
 
-            survivor.code = get_code(survivor_entry->d_name, entry->d_name);
+            get_code(&survivor, survivor_entry->d_name, entry->d_name);
 
             survivor.stack_id = current_segment++;
 
@@ -73,4 +76,13 @@ void load_players() {
     }
 
     closedir(dir);
+
+    allocate_memory();
+
+    if ((teams_in_play = malloc(sizeof(Team)*teams_per_round)) == 0) {printf("Not enough memory."); exit(1);}
+
+    if ((teams_per_round > team_count)) {printf("Not enough teams supplied."); exit(1);}
+    if ((team_permutation = malloc(sizeof(int32_t)*(teams_per_round+1))) == 0) {printf("Not enough memory."); exit(1);}
+    for (int i=0; i<teams_per_round; i++) team_permutation[i] = i;
+    team_permutation[teams_per_round] = team_count;
 }
