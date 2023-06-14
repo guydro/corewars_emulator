@@ -1,6 +1,6 @@
 #include "init_helper_functions.h"
 #include "init.h"
-#include "structs_and_libraries.h"
+#include "structs_libraries_and_macros.h"
 #include "globals.h"
 
 void init_usr_input() {
@@ -13,17 +13,14 @@ void init_usr_input() {
 void load_players() {
     // Init survivors
     init_survivor_and_team_count();
-    if ((teams = malloc(sizeof(Team)*team_count)) == 0) {printf("Not enough memory."); exit(1);};
-    if ((zombies = malloc(sizeof(Team)*zombie_count)) == 0) {printf("Not enough memory."); exit(1);}
+    if ((teams = malloc(sizeof(Team)*team_count)) == 0) exit_angrily
+    if ((zombies = malloc(sizeof(Team)*zombie_count)) == 0) exit_angrily
 
     DIR* dir;
     struct dirent* entry;
 
     dir = opendir("./survivors");
-    if(dir == NULL) {
-        puts("Error reading survivors folder");
-        exit(1);
-    }
+    if(dir == NULL) exit_angrily
 
     int32_t current_segment = 1;
     int32_t current_team = 0;
@@ -79,10 +76,10 @@ void load_players() {
 
     allocate_memory();
 
-    if ((teams_in_play = malloc(sizeof(Team)*teams_per_round)) == 0) {printf("Not enough memory."); exit(1);}
+    if ((teams_in_play = malloc(sizeof(Team)*(teams_per_round+zombie_count))) == 0) exit_angrily
 
-    if ((teams_per_round > team_count)) {printf("Not enough teams supplied."); exit(1);}
-    if ((team_permutation = malloc(sizeof(int32_t)*(teams_per_round+1))) == 0) {printf("Not enough memory."); exit(1);}
+    if ((teams_per_round > team_count)) exit_angrily
+    if ((team_permutation = malloc(sizeof(int32_t)*(teams_per_round+1))) == 0) exit_angrily
     for (int i=0; i<teams_per_round; i++) team_permutation[i] = i;
     team_permutation[teams_per_round] = team_count;
 }

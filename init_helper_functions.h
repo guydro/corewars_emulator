@@ -1,4 +1,4 @@
-#include "structs_and_libraries.h"
+#include "structs_libraries_and_macros.h"
 #include "globals.h"
 
 #ifndef COREWARSINTERPRETER_INIT_HELPER_FUNCTIONS_H

@@ -2,7 +2,7 @@ CC = gcc
 LNK = gcc
 NASM = nasm
 CFLAGS = -ggdb -Wall -m64 -O0 -c
-LNKFLAGS = -ggdb -Wall -m64 -O0
+LNKFLAGS = $(CLFAGS)
 ASMFLAGS = -f elf64 -g -Wall
 SRCs = $(wildcard *.c)
 OBJs := $(SRCs:%.c=%.o)

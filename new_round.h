@@ -1,9 +1,8 @@
 #include "globals.h"
-#include "structs_and_libraries.h"
+#include "structs_libraries_and_macros.h"
 
-
-#ifndef COREWARSINTERPRETER_INIT_H
-#define COREWARSINTERPRETER_INIT_H
+#ifndef COREWARSINTERPRETER_NEWROUND_H
+#define COREWARSINTERPRETER_NEWROUND_H
 
 bool choose_teams(void);
 

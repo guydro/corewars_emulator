@@ -1,5 +1,5 @@
 #include "globals.h"
-#include "structs_and_libraries.h"
+#include "structs_libraries_and_macros.h"
 
 
 bool choose_teams() {
@@ -24,13 +24,16 @@ bool choose_teams() {
     for (int i=0; i<teams_per_round; i++) {
         teams_in_play[i] = teams[team_permutation[i]];
     }
+    for (int i=0; i<zombie_count; i++) {
+        teams_in_play[i+teams_per_round] = zombies[i];
+    }
 
     teams_alive = teams_per_round;
     return true;
 }
 
 void resurrect_players() {
-    for(Team* team = teams_in_play; team < teams_in_play + teams_per_round; team++) {
+    for(Team* team = teams_in_play; team < teams_in_play + total_team_count; team++) {
         team->living_survivors[0] = true;
         if (team->survivors[1].initialized) {team->living_survivors[1] = true;}
         else {team->living_survivors[1] = false;}
@@ -39,15 +42,14 @@ void resurrect_players() {
 
 void reset_segments() {
     // TODO: Figure out which segments to actually reset
-    memset(&memory[0], 0, sizeof(Segment));
+    if ((memset(&memory[0], 0, sizeof(Segment))) == 0) exit_angrily
 }
 
 void insert_players() {
     // TODO: EXTREMELY BAD IMPLEMENTATION!!! PLS FIX
     // Implement adam's linked lists sol
     bool occupied[0x10000];
-
-    for(Team* team = teams_in_play; team < teams_in_play + teams_per_round; team++) {
+    for(Team* team = teams_in_play; team < teams_in_play + total_team_count; team++) {
         for(int i = 0; i < 2; i++) {
             if(!(team->living_survivors[i])) continue;
 
@@ -76,8 +78,8 @@ void insert_players() {
 }
 
 bool init_round() {
-    if (!choose_teams()) { return false; }
-    
+    if (!choose_teams()) {return false;}
+
     resurrect_players();
     reset_segments();
 
