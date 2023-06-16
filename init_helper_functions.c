@@ -1,4 +1,4 @@
-#include "structs_and_libraries.h"
+#include "structs_libraries_and_macros.h"
 #include "globals.h"
 
 void init_survivor_and_team_count() {
@@ -6,10 +6,7 @@ void init_survivor_and_team_count() {
     struct dirent* entry;
 
     dir = opendir("./survivors");
-    if(dir == NULL) {
-        puts("Error reading survivors folder");
-        exit(1);
-    }
+    if(dir == NULL) exit_angrily
 
     // Count amounts of survivors
     team_count = 0;
@@ -38,7 +35,7 @@ void init_survivor_and_team_count() {
     closedir(dir);
 }
 
-char* get_code(char* filename, char* dirname) {
+void get_code(Survivor* survivor, char* filename, char* dirname) { // TODO: validate
     char tpath[512];
     strcpy(tpath, "./survivors/");
     char* path = strcat(strcat(strcat(tpath, dirname), "/"), filename);
@@ -48,24 +45,24 @@ char* get_code(char* filename, char* dirname) {
     fseek(fptr, 0, SEEK_END); // seek to end of file
     uint16_t bin_size = ftell(fptr); // get current file pointer
     fseek(fptr, 0, SEEK_SET);
-    if (bin_size == 0x1000) {printf("File %s is too large.", path); exit(1);}
+    if (bin_size == 0x1000) exit_angrily
 
     fread(tcode, bin_size, 1, fptr);
     fclose(fptr);
 
 
     char* code;
-    if ((code = malloc(sizeof(char)*bin_size)) == 0) {printf("Not enough memory"); exit(1);}
+    if ((code = malloc(sizeof(char)*bin_size)) == 0) exit_angrily
     memcpy(code, tcode, sizeof(char)*bin_size);
-    code[bin_size] = 0;
 
-    return code;
+   survivor->code = code;
+   survivor->code_size = bin_size;
 }
 
 void add_survivor_to_team(Team* team, Survivor survivor) {
-    survivor.initiaized = true;
-    if (!(team->survivors[0].initiaized)) {team->survivors[0] = survivor; return;}
-    if (!(team->survivors[1].initiaized)) {team->survivors[1] = survivor; return;}
+    survivor.initialized = true;
+    if (!(team->survivors[0].initialized)) {team->survivors[0] = survivor; return;}
+    if (!(team->survivors[1].initialized)) {team->survivors[1] = survivor; return;}
     printf("Please make sure there are at most 2 survivors per team."); exit(1);
 }
 
@@ -73,8 +70,5 @@ void allocate_memory() {
     int segment_cnt = 1 + team_count + survivor_count;
     memory = malloc(sizeof(Segment)*segment_cnt);
 
-    if (memory == 0) {
-        printf("Not enough memory, try to reduce the number of survivors.");
-        exit(1);
-    }
+    if (memory == 0) exit_angrily
 }

@@ -6,9 +6,15 @@
 #include <stdbool.h>
 #include <inttypes.h>
 #include <dirent.h>
+#include <errno.h>
 
 #ifndef COREWARSINTERPRETER_INIT_GLOBALS_H
 #define COREWARSINTERPRETER_INIT_GLOBALS_H
+
+#define total_team_count (teams_per_round+zombie_count)
+#define exit_angrily {fprintf(stderr, "Error in file " __FILE__ " on line: %d. %s.\r\n", __LINE__, strerror(errno)); \
+                        exit(1);}
+#define debug_print_statement     printf("Hit file " __FILE__ " line %d\r\n", __LINE__);
 
 typedef struct  {
     bool initialized;
